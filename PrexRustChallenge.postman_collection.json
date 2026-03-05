@@ -1,0 +1,731 @@
+{
+  "info": {
+    "_postman_id": "3f4c69a3-a966-4101-bdc7-89c4ad9337ed",
+    "name": "Prex Rust Challenge",
+    "description": "This project consists of a simplistic payment processor service, exposed as a REST API\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52920465",
+    "_collection_link": "https://go.postman.co/collection/52920465-3f4c69a3-a966-4101-bdc7-89c4ad9337ed?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "new_client",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200 or 201\", function () {",
+              "    pm.expect(pm.response.code, `Unexpected status ${pm.response.code}. Body: ${pm.response.text()}`).to.be.oneOf([200, 201]);",
+              "});",
+              "",
+              "pm.test(\"Response is JSON when successful\", function () {",
+              "    if ([200, 201].includes(pm.response.code)) {",
+              "        pm.expect(pm.response.headers.get('Content-Type') || '', 'Missing Content-Type header').to.match(/application\\/json/i);",
+              "        pm.response.to.be.json;",
+              "    }",
+              "});",
+              "pm.test(\"Body contains client ID\", function () { var jsonData = pm.response.json(); pm.expect(jsonData).to.equal(0); });"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"client_name\": \"Federica\",\n  \"birth_date\": \"2000-06-18\",\n  \"document_number\": {{document_number}},\n  \"country\": \"Argentina\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{service_url}}/new_client",
+          "host": [
+            "{{service_url}}"
+          ],
+          "path": [
+            "new_client"
+          ]
+        },
+        "description": "This endpoint is used to create a new client. The document number provided must be different from other stored clients. As a result this service will return the client's id."
+      },
+      "response": [
+        {
+          "name": "Succesful Client Creation A",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client_name\": \"Federica\",\n  \"birth_date\": \"2000-06-18\",\n  \"document_number\": \"34880911\",\n  \"country\": \"Argentina\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{service_url}}/new_client",
+              "host": [
+                "{{service_url}}"
+              ],
+              "path": [
+                "new_client"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "content-length",
+              "value": "1"
+            },
+            {
+              "key": "content-type",
+              "value": "application/json"
+            },
+            {
+              "key": "date",
+              "value": "Wed, 04 Mar 2026 23:11:20 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "0"
+        },
+        {
+          "name": "Succesful Client Creation B",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client_name\": \"Camila\",\n  \"birth_date\": \"1998-09-21\",\n  \"document_number\": \"5677800\",\n  \"country\": \"Argentina\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{client_url}}/new_client",
+              "host": [
+                "{{client_url}}"
+              ],
+              "path": [
+                "new_client"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "content-length",
+              "value": "1"
+            },
+            {
+              "key": "content-type",
+              "value": "application/json"
+            },
+            {
+              "key": "date",
+              "value": "Thu, 05 Mar 2026 13:29:32 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "0"
+        },
+        {
+          "name": "Error: A client already exists for the given document number",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client_name\": \"Federico\",\n  \"birth_date\": \"2000-06-17\",\n  \"document_number\": \"34880911\",\n  \"country\": \"Argentina\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{service_url}}/new_client",
+              "host": [
+                "{{service_url}}"
+              ],
+              "path": [
+                "new_client"
+              ]
+            }
+          },
+          "status": "Internal Server Error",
+          "code": 500,
+          "_postman_previewlanguage": "plain",
+          "header": [
+            {
+              "key": "content-length",
+              "value": "53"
+            },
+            {
+              "key": "content-type",
+              "value": "text/plain; charset=utf-8"
+            },
+            {
+              "key": "date",
+              "value": "Thu, 05 Mar 2026 13:29:58 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "A client already exists for the given document number"
+        }
+      ]
+    },
+    {
+      "name": "new_credit_transaction",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Successful POST request\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"client_id\": {{client_id}},\n    \"credit_amount\": {{credit_amount}}\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{service_url}}/new_credit_transaction",
+          "host": [
+            "{{service_url}}"
+          ],
+          "path": [
+            "new_credit_transaction"
+          ]
+        },
+        "description": "This endpoint is used to add a given amount to a client's balance. The client must already exist. The new updated balance will be returned as a response."
+      },
+      "response": [
+        {
+          "name": "Credit Transaction on Client A",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"client_id\": 0,\n    \"credit_amount\": 500.45\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{service_url}}/new_credit_transaction",
+              "host": [
+                "{{service_url}}"
+              ],
+              "path": [
+                "new_credit_transaction"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "content-length",
+              "value": "8"
+            },
+            {
+              "key": "content-type",
+              "value": "application/json"
+            },
+            {
+              "key": "date",
+              "value": "Thu, 05 Mar 2026 13:19:24 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "\"500.45\""
+        },
+        {
+          "name": "Credit Transaction on Client B",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"client_id\": 1,\n    \"credit_amount\": 600.45\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{service_url}}/new_credit_transaction",
+              "host": [
+                "{{service_url}}"
+              ],
+              "path": [
+                "new_credit_transaction"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "content-length",
+              "value": "8"
+            },
+            {
+              "key": "content-type",
+              "value": "application/json"
+            },
+            {
+              "key": "date",
+              "value": "Thu, 05 Mar 2026 13:30:11 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "\"600.45\""
+        },
+        {
+          "name": "Error: Negative credit amount",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"client_id\": 0,\n    \"credit_amount\": -733.33\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{service_url}}/new_credit_transaction",
+              "host": [
+                "{{service_url}}"
+              ],
+              "path": [
+                "new_credit_transaction"
+              ]
+            }
+          },
+          "_postman_previewlanguage": null,
+          "header": null,
+          "cookie": [],
+          "body": null
+        }
+      ]
+    },
+    {
+      "name": "new_debit_transaction",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Successful POST request\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"client_id\": {{client_id}},\n    \"debit_amount\": {{debit_amount}}\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{service_url}}/new_debit_transaction",
+          "host": [
+            "{{service_url}}"
+          ],
+          "path": [
+            "new_debit_transaction"
+          ]
+        },
+        "description": "This endpoint is used to subtract a given amount from a client's balance. The client must already exist. The new updated balance will be returned as a response."
+      },
+      "response": [
+        {
+          "name": "Debit Transaction on Client A",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"client_id\": 0,\n    \"debit_amount\": 700.33\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{service_url}}/new_debit_transaction",
+              "host": [
+                "{{service_url}}"
+              ],
+              "path": [
+                "new_debit_transaction"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "content-length",
+              "value": "9"
+            },
+            {
+              "key": "content-type",
+              "value": "application/json"
+            },
+            {
+              "key": "date",
+              "value": "Thu, 05 Mar 2026 13:31:16 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "\"-700.33\""
+        },
+        {
+          "name": "Debit Transaction on Client B",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"client_id\": 1,\n    \"debit_amount\": 111.12\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{service_url}}/new_debit_transaction",
+              "host": [
+                "{{service_url}}"
+              ],
+              "path": [
+                "new_debit_transaction"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "content-length",
+              "value": "8"
+            },
+            {
+              "key": "content-type",
+              "value": "application/json"
+            },
+            {
+              "key": "date",
+              "value": "Thu, 05 Mar 2026 13:33:14 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "\"489.33\""
+        },
+        {
+          "name": "Error: Negative debit amount",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"client_id\": 0,\n    \"debit_amount\": -0.33\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{service_url}}/new_debit_transaction",
+              "host": [
+                "{{service_url}}"
+              ],
+              "path": [
+                "new_debit_transaction"
+              ]
+            }
+          },
+          "_postman_previewlanguage": null,
+          "header": null,
+          "cookie": [],
+          "body": null
+        }
+      ]
+    },
+    {
+      "name": "store_balances",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Successful POST request\", function () {",
+              "    pm.response.to.have.status(204);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{service_url}}/store_balances",
+          "host": [
+            "{{service_url}}"
+          ],
+          "path": [
+            "store_balances"
+          ]
+        },
+        "description": "This endpoint is used to write all current client's balances to a balance report file. All in-memory balances will be set to zero as a result of this operation"
+      },
+      "response": []
+    },
+    {
+      "name": "client_balance",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{service_url}}/client_balance/{{client_id}}",
+          "host": [
+            "{{service_url}}"
+          ],
+          "path": [
+            "client_balance",
+            "{{client_id}}"
+          ]
+        },
+        "description": "This endpoint is used to query a client's information and current balance"
+      },
+      "response": [
+        {
+          "name": "Get Client Balance A",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{service_url}}/client_balance/0",
+              "host": [
+                "{{service_url}}"
+              ],
+              "path": [
+                "client_balance",
+                "0"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "content-length",
+              "value": "123"
+            },
+            {
+              "key": "content-type",
+              "value": "application/json"
+            },
+            {
+              "key": "date",
+              "value": "Thu, 05 Mar 2026 13:35:10 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"client_name\": \"Federica\",\n    \"birth_date\": \"2000-06-18\",\n    \"document_number\": \"34880911\",\n    \"country\": \"Argentina\",\n    \"balance\": \"-199.88\"\n}"
+        },
+        {
+          "name": "Get Client Balance B",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{service_url}}/client_balance/1",
+              "host": [
+                "{{service_url}}"
+              ],
+              "path": [
+                "client_balance",
+                "1"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "content-length",
+              "value": "119"
+            },
+            {
+              "key": "content-type",
+              "value": "application/json"
+            },
+            {
+              "key": "date",
+              "value": "Thu, 05 Mar 2026 14:23:05 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"client_name\": \"Camila\",\n    \"birth_date\": \"1998-09-21\",\n    \"document_number\": \"5677800\",\n    \"country\": \"Argentina\",\n    \"balance\": \"489.33\"\n}"
+        },
+        {
+          "name": "Error: Nonexistant client",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{service_url}}/client_balance/5",
+              "host": [
+                "{{service_url}}"
+              ],
+              "path": [
+                "client_balance",
+                "5"
+              ]
+            }
+          },
+          "_postman_previewlanguage": null,
+          "header": null,
+          "cookie": [],
+          "body": null
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "service_url",
+      "value": "http://127.0.0.1:8080"
+    },
+    {
+      "key": "client_id",
+      "value": "0"
+    },
+    {
+      "key": "credit_amount",
+      "value": "455,55"
+    },
+    {
+      "key": "debit_amount",
+      "value": "312,3"
+    },
+    {
+      "key": "document_number",
+      "value": "\"67899133\""
+    }
+  ]
+}
